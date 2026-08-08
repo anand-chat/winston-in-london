@@ -79,10 +79,11 @@ export const WEATHER_TRANSITION_SEC = 4;
 export const MILESTONES = [
   { score: 100,  text: 'Good boy!' },
   { score: 250,  text: 'Winston is warming up' },
-  { score: 500,  text: 'Zoomies unlocked' },
+  { score: 500,  text: 'Mocca takes the lead!' },
   { score: 750,  text: 'Tail at maximum wag' },
   { score: 1000, text: SECRET_MESSAGE },
-  { score: 1500, text: 'Winston has run further than any Chihuahua in history' },
+  { score: 1080, text: 'Maui takes the lead!' },
+  { score: 1500, text: 'No Chihuahua has ever run this far' },
   { score: 2000, text: "He's doing it for you" },
 ];
 

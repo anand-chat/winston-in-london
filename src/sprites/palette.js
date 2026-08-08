@@ -41,7 +41,15 @@ export const CHAR_MAP = {
   Z: '#3A3F46', // dark slate shade
 };
 
-export function drawMatrix(ctx, matrix, x, y, scale) {
+// Coat swaps for the relay dogs: remap Winston's black (K) and fur
+// shade (F) to each pup's colors, keeping white markings and features.
+export const SKINS = {
+  winston: null,
+  mocca: { K: '#C9A87C', F: '#AD8B5D' }, // beige & white
+  maui:  { K: '#8B9099', F: '#6E747E' }, // grey & white
+};
+
+export function drawMatrix(ctx, matrix, x, y, scale, remap) {
   for (let r = 0; r < matrix.length; r++) {
     const row = matrix[r];
     let c = 0;
@@ -50,7 +58,7 @@ export function drawMatrix(ctx, matrix, x, y, scale) {
       if (ch === '.') { c++; continue; }
       let end = c + 1;
       while (end < row.length && row[end] === ch) end++;
-      const color = CHAR_MAP[ch];
+      const color = (remap && remap[ch]) || CHAR_MAP[ch];
       if (color) {
         ctx.fillStyle = color;
         ctx.fillRect(x + c * scale, y + r * scale, (end - c) * scale, scale);

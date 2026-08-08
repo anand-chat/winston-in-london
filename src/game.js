@@ -7,6 +7,7 @@ import { PickupPool } from './entities/pickup.js';
 import { ParticleSystem } from './entities/particles.js';
 import { Parallax } from './world/parallax.js';
 import { renderPuddleReflection } from './world/ground.js';
+import { SKINS } from './sprites/palette.js';
 import { Hud, pad5 } from './hud.js';
 import { audio } from './audio.js';
 import { storageGet, storageSet } from './storage.js';
@@ -14,6 +15,10 @@ import { storageGet, storageSet } from './storage.js';
 // DYING is the happy "catching the ball" transition into GAME_OVER.
 const STATES = ['BOOT', 'TITLE', 'COUNTDOWN', 'PLAYING', 'DYING', 'GAME_OVER', 'PAUSED'];
 const WEATHERS = ['bright', 'overcast', 'drizzle'];
+const SKIN_SWAPS = [
+  { score: 500,  skin: 'mocca' },
+  { score: 1000, skin: 'maui' },
+];
 
 function overlap(a, b) {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
@@ -49,6 +54,7 @@ export class Game {
     this.lastJumpTypeTime = -10;
     this.runTime = 0;
     this.nextMilestoneIdx = 0;
+    this.nextSkinIdx = 0;
     this.lastHundred = 0;
     this.nextHeartScore = C.HEART_RARITY_POINTS * (0.7 + this.rng.float() * 0.6);
     this.winston.reset();
@@ -69,6 +75,12 @@ export class Game {
     this.targetWetness = 0;
     this.darken = 0;
     this.targetDarken = 0;
+  }
+
+  dogName() {
+    if (this.score >= 1000) return 'Maui';
+    if (this.score >= 500) return 'Mocca';
+    return 'Winston';
   }
 
   setState(s) {
@@ -178,6 +190,13 @@ export class Game {
       this.hud.toast(C.MILESTONES[this.nextMilestoneIdx].text);
       this.nextMilestoneIdx++;
     }
+    // Relay: Mocca takes over at 500, Maui at 1000
+    while (this.nextSkinIdx < SKIN_SWAPS.length && this.score >= SKIN_SWAPS[this.nextSkinIdx].score) {
+      this.winston.skin = SKINS[SKIN_SWAPS[this.nextSkinIdx].skin];
+      this.particles.emit('sparkle', this.winston.x + 20, this.winston.y - 30, 12, this.rng);
+      audio.bark();
+      this.nextSkinIdx++;
+    }
     // Every 100: beeps + flash + heart pop
     if (Math.floor(this.score / 100) > Math.floor(prevScore / 100)) {
       audio.milestone();
@@ -241,7 +260,7 @@ export class Game {
           this.lives--;
           this.invulnT = C.SECOND_CHANCE_INVULN_SEC;
           o.hit = true;
-          this.hud.toast('Winston shakes it off!');
+          this.hud.toast(`${this.dogName()} shakes it off!`);
           this.particles.emit('sparkle', this.winston.x + 20, this.winston.y - 30, 10, this.rng);
           audio.bark();
         } else {

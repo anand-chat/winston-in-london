@@ -25,6 +25,7 @@ export class Winston {
     this.shield = false;
     this.slowTimer = 0;
     this.barkChance = 0.2;
+    this.skin = null;
   }
 
   get width() { return C.WINSTON_W; }
@@ -121,10 +122,10 @@ export class Winston {
       ctx.save();
       ctx.shadowColor = '#F5EFE3';
       ctx.shadowBlur = 12;
-      drawMatrix(ctx, frame, this.x, drawY, C.PIXEL_SCALE);
+      drawMatrix(ctx, frame, this.x, drawY, C.PIXEL_SCALE, this.skin);
       ctx.restore();
     } else {
-      drawMatrix(ctx, frame, this.x, drawY, C.PIXEL_SCALE);
+      drawMatrix(ctx, frame, this.x, drawY, C.PIXEL_SCALE, this.skin);
     }
   }
 }
