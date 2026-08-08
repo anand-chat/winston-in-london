@@ -429,8 +429,9 @@ export class Game {
   // --- Rendering ---
   render(ctx, alpha) {
     const speedFrac = (this.speed - C.SPEED_START) / (C.SPEED_MAX - C.SPEED_START);
-    // Day drift: dusk at 1500+
-    const duskT = Math.min(1, this.score / 1800);
+    // Day/night cycle: night falls by ~500 points, dawn returns by ~1000, repeating
+    const dayPhase = (this.score % 1000) / 1000;
+    const duskT = 0.5 - 0.5 * Math.cos(dayPhase * Math.PI * 2);
 
     ctx.save();
 

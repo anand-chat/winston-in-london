@@ -189,18 +189,6 @@ function drawFurniture(ctx, x, variant, t, duskT) {
       ctx.fillRect(x + 82, baseY - 104, 20, 12);
       break;
     }
-    case 5: { // Royal Mail pillar box
-      ctx.fillStyle = '#D6392C';
-      ctx.fillRect(x + 6, baseY - 40, 20, 40);
-      ctx.beginPath();
-      ctx.arc(x + 16, baseY - 40, 10, Math.PI, 0);
-      ctx.fill();
-      ctx.fillStyle = '#96271F';
-      ctx.fillRect(x + 9, baseY - 32, 14, 3);
-      ctx.fillStyle = '#2E3338';
-      ctx.fillRect(x + 4, baseY - 4, 24, 4);
-      break;
-    }
     case 4: { // Park bench
       ctx.fillStyle = '#4C6B45';
       for (let i = 0; i < 4; i++) ctx.fillRect(x + i * 3, baseY - 40 + i * 3, 44, 2);
@@ -268,11 +256,11 @@ export class Parallax {
     ctx.restore();
 
     // Layer 4: street furniture
-    const fOff = ((this.scroll * 0.75) % (FURN_TILE * 6) + FURN_TILE * 6) % (FURN_TILE * 6);
+    const fOff = ((this.scroll * 0.75) % (FURN_TILE * 5) + FURN_TILE * 5) % (FURN_TILE * 5);
     for (let i = -1; i <= Math.ceil(LOGICAL_WIDTH / FURN_TILE) + 4; i++) {
       const worldIdx = Math.floor((this.scroll * 0.75) / FURN_TILE) + i;
       const x = i * FURN_TILE - (fOff % FURN_TILE);
-      const variant = ((worldIdx % 6) + 6) % 6;
+      const variant = ((worldIdx % 5) + 5) % 5;
       if (x > -120 && x < LOGICAL_WIDTH + 120) drawFurniture(ctx, x, variant, t, duskT);
     }
 
