@@ -17,13 +17,9 @@ export function renderGround(ctx, scrollX, wetness) {
 
   // Paving: subtle wide slabs, low contrast
   const off = ((scrollX % TILE_W) + TILE_W) % TILE_W;
-  ctx.fillStyle = 'rgba(255,255,255,0.06)';
-  for (let row = 0; row < 3; row++) {
-    const y = GROUND_Y + 12 + row * 16;
-    const stagger = row % 2 ? 24 : 0;
-    for (let x = -off - TILE_W + stagger; x < LOGICAL_WIDTH + TILE_W; x += 48) {
-      ctx.fillRect(x + 1, y, 44, 12);
-    }
+  ctx.fillStyle = 'rgba(255,255,255,0.05)';
+  for (let x = -off - TILE_W; x < LOGICAL_WIDTH + TILE_W; x += 60) {
+    ctx.fillRect(x + 1, GROUND_Y + 12, 56, 10);
   }
 
   // Drain grates every tile, softened

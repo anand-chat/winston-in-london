@@ -330,7 +330,7 @@ export class Game {
       // Fast movers close on Winston quicker than the scroll speed, which
       // would compress the gap the player just banked. Spawn them farther
       // right so their arrival time matches a normal obstacle's.
-      const closingMult = type === 'cab' ? 1.18 : type === 'squirrel' ? 1.12 : 1;
+      const closingMult = type === 'cab' ? 1.18 : 1;
       const baseX = C.LOGICAL_WIDTH + 40;
       const extra = (baseX - C.WINSTON_X) * (closingMult - 1);
       const o = this.obstacles.spawn(type, baseX + extra, this.rng);
@@ -343,7 +343,7 @@ export class Game {
     const gapSec = this.rng.range(C.GAP_MIN_SEC, C.GAP_MAX_SEC);
     this.distToNextSpawn = gapSec * this.speed;
     // Leave breathing room after a fast mover so the follow-up is reactable
-    if (type === 'cab' || type === 'squirrel') {
+    if (type === 'cab') {
       this.distToNextSpawn += 0.35 * this.speed;
     }
     // The bus arrives late (after the horn) and fast — hold the next spawn back
@@ -398,7 +398,6 @@ export class Game {
     let closing = this.speed;
     if (nearest.type === 'cab') closing = this.speed * 1.18;
     if (nearest.type === 'bus') closing = this.speed * 1.25;
-    if (nearest.type === 'squirrel') closing = this.speed * 1.45; // worst-case dart
     const timeToReach = nearestDist / closing;
 
     if (def.type === 'duck') {
@@ -407,7 +406,7 @@ export class Game {
     } else {
       if (w.duckHeld) w.releaseDuck();
       // Jump so apex covers obstacle: jump when time-to-reach ~ rise time
-      const jumpLead = nearest.type === 'squirrel' ? 0.18 : 0.30;
+      const jumpLead = 0.30;
       if (w.grounded && timeToReach < jumpLead && timeToReach > 0) {
         w.pressJump(this.rng);
         w.jumpHeld = true;

@@ -142,34 +142,6 @@ export const CAB = [ // 48 x 26 -> 96x52
   '...............................................',
 ];
 
-export const SQUIRREL_1 = [ // 12 x 11 -> 24x22
-  '........TTT.',
-  '.......TTTTT',
-  '.......TTTTT',
-  'TT.....TTKTT',
-  'TTT...TTTTT.',
-  'TTTT.TTTTTT.',
-  '.TTTTTTTTT..',
-  '.TTTTTTTT...',
-  '..TTTTTTT...',
-  '...TT..TT...',
-  '...T....T...',
-];
-
-export const SQUIRREL_2 = [
-  '........TTT.',
-  '.......TTTTT',
-  '..TT...TTTTT',
-  '.TTTT..TTKTT',
-  '.TTTT.TTTTT.',
-  '.TTTTTTTTTT.',
-  '..TTTTTTTT..',
-  '..TTTTTTTT..',
-  '..TTTTTTT...',
-  '..TT....TT..',
-  '.T........T.',
-];
-
 export const BUS = [ // 75 x 44 -> 150x88
   '....RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
   '..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..',

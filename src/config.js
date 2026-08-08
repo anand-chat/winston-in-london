@@ -59,9 +59,8 @@ export const OBSTACLES = {
   bin:      { w: 38,  h: 46, unlock: 150, type: 'jump' },
   puddle:   { w: 70,  h: 8,  unlock: 200, type: 'puddle' },
   pigeons:  { w: 66,  h: 18, unlock: 300, type: 'duck', flyY: 240 },
-  cab:      { w: 96,  h: 52, unlock: 500, type: 'jump', speedMult: 0.18 },
-  squirrel: { w: 24,  h: 22, unlock: 700, type: 'jump' },
-  bus:      { w: 150, h: 88, unlock: 900, type: 'duck', hornLeadSec: 1.2 },
+  cab:      { w: 96,  h: 52, unlock: 400, type: 'jump', speedMult: 0.18 },
+  bus:      { w: 150, h: 88, unlock: 700, type: 'duck', hornLeadSec: 1.2 },
 };
 
 // Puddle effect

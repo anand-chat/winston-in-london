@@ -62,7 +62,7 @@ test('every obstacle type appears at its unlock threshold', async ({ page }) => 
     g.autopilot(false);
     return seen;
   });
-  for (const type of ['cone', 'phonebox', 'bin', 'puddle', 'pigeons', 'cab', 'squirrel', 'bus']) {
+  for (const type of ['cone', 'phonebox', 'bin', 'puddle', 'pigeons', 'cab', 'bus']) {
     expect(seen[type], `obstacle ${type} should appear`).toBe(true);
   }
 });

@@ -73,6 +73,59 @@ function drawTerraceRow(ctx, x, duskT) {
   ctx.fillRect(x + 59, baseY - 124, 2, 24);
 }
 
+// Kensington-Gardens-style park stretch: iron railings, big leafy
+// trees, and a flower bed, with an occasional bandstand.
+function drawParkRow(ctx, x, withBandstand) {
+  const baseY = GROUND_Y;
+  // Big soft tree canopies behind the railings
+  const trees = [
+    { tx: 60,  r: 42, c: '#6E8F63' },
+    { tx: 180, r: 34, c: '#7B9A6E' },
+    { tx: 320, r: 46, c: '#63855A' },
+    { tx: 440, r: 30, c: '#7B9A6E' },
+  ];
+  for (const tr of trees) {
+    ctx.fillStyle = '#5A4636';
+    ctx.fillRect(x + tr.tx - 4, baseY - tr.r - 20, 8, tr.r + 20);
+    ctx.fillStyle = tr.c;
+    ctx.beginPath();
+    ctx.arc(x + tr.tx, baseY - tr.r - 34, tr.r, 0, Math.PI * 2);
+    ctx.arc(x + tr.tx - tr.r * 0.6, baseY - tr.r - 14, tr.r * 0.6, 0, Math.PI * 2);
+    ctx.arc(x + tr.tx + tr.r * 0.6, baseY - tr.r - 14, tr.r * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  if (withBandstand) {
+    const bx = x + 250;
+    ctx.fillStyle = '#4A5560';
+    ctx.beginPath();
+    ctx.moveTo(bx - 34, baseY - 58);
+    ctx.lineTo(bx, baseY - 86);
+    ctx.lineTo(bx + 34, baseY - 58);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#CFC7B8';
+    for (let i = -1; i <= 1; i++) ctx.fillRect(bx + i * 22 - 2, baseY - 58, 4, 46);
+    ctx.fillStyle = '#8B939C';
+    ctx.fillRect(bx - 38, baseY - 14, 76, 6);
+  }
+  // Iron railings along the whole stretch
+  ctx.fillStyle = '#2E3338';
+  ctx.fillRect(x, baseY - 30, 520, 3);
+  for (let rx = 0; rx < 520; rx += 14) {
+    ctx.fillRect(x + rx, baseY - 30, 2, 30);
+  }
+  // Flower bed in front of the railings
+  const flowerColors = ['#D96A7B', '#E8B44C', '#C05B9E', '#E8748A'];
+  for (let fx = 8; fx < 512; fx += 24) {
+    ctx.fillStyle = '#5E7A55';
+    ctx.fillRect(x + fx, baseY - 8, 3, 8);
+    ctx.fillStyle = flowerColors[Math.floor(fx / 24) % flowerColors.length];
+    ctx.beginPath();
+    ctx.arc(x + fx + 1, baseY - 10, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 function drawFurniture(ctx, x, variant, t, duskT) {
   const baseY = GROUND_Y;
   switch (variant) {
@@ -126,6 +179,15 @@ function drawFurniture(ctx, x, variant, t, duskT) {
       ctx.fillRect(x + 82, baseY - 104, 20, 12);
       break;
     }
+    case 4: { // Park bench
+      ctx.fillStyle = '#4C6B45';
+      for (let i = 0; i < 4; i++) ctx.fillRect(x + i * 3, baseY - 40 + i * 3, 44, 2);
+      ctx.fillRect(x + 10, baseY - 26, 40, 4);
+      ctx.fillStyle = '#2E3338';
+      ctx.fillRect(x + 12, baseY - 22, 4, 22);
+      ctx.fillRect(x + 44, baseY - 22, 4, 22);
+      break;
+    }
   }
 }
 
@@ -170,21 +232,25 @@ export class Parallax {
     // Layer 2: far skyline
     renderSkyline(ctx, this.scroll * 0.10, reducedMotion ? 0 : t, darken > 0.5);
 
-    // Layer 3: mid buildings
+    // Layer 3: mid buildings, with park stretches every third tile
     const midOff = ((this.scroll * 0.35) % MID_TILE + MID_TILE) % MID_TILE;
     ctx.save();
     ctx.globalAlpha = 0.45;
     for (let i = -1; i <= Math.ceil(LOGICAL_WIDTH / MID_TILE) + 1; i++) {
-      drawTerraceRow(ctx, i * MID_TILE - midOff, duskT);
+      const worldIdx = Math.floor((this.scroll * 0.35) / MID_TILE) + i;
+      const kind = ((worldIdx % 3) + 3) % 3;
+      const x = i * MID_TILE - midOff;
+      if (kind === 2) drawParkRow(ctx, x, ((worldIdx % 6) + 6) % 6 === 2);
+      else drawTerraceRow(ctx, x, duskT);
     }
     ctx.restore();
 
     // Layer 4: street furniture
-    const fOff = ((this.scroll * 0.75) % (FURN_TILE * 4) + FURN_TILE * 4) % (FURN_TILE * 4);
+    const fOff = ((this.scroll * 0.75) % (FURN_TILE * 5) + FURN_TILE * 5) % (FURN_TILE * 5);
     for (let i = -1; i <= Math.ceil(LOGICAL_WIDTH / FURN_TILE) + 4; i++) {
       const worldIdx = Math.floor((this.scroll * 0.75) / FURN_TILE) + i;
       const x = i * FURN_TILE - (fOff % FURN_TILE);
-      const variant = ((worldIdx % 4) + 4) % 4;
+      const variant = ((worldIdx % 5) + 5) % 5;
       if (x > -120 && x < LOGICAL_WIDTH + 120) drawFurniture(ctx, x, variant, t, duskT);
     }
 

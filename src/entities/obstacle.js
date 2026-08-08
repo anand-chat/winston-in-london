@@ -1,9 +1,19 @@
 import * as C from '../config.js';
 import { drawMatrix } from '../sprites/palette.js';
-import { CONE, PHONEBOX, BIN, PIGEON_1, PIGEON_2, CAB, SQUIRREL_1, SQUIRREL_2, BUS } from '../sprites/props.js';
+import { CONE, PHONEBOX, BIN, PIGEON_1, PIGEON_2, CAB, BUS } from '../sprites/props.js';
 import { PALETTE } from '../sprites/palette.js';
 
 const POOL_SIZE = 16;
+
+function drawShadow(ctx, x, w) {
+  ctx.save();
+  ctx.globalAlpha = 0.18;
+  ctx.fillStyle = '#1B1B1F';
+  ctx.beginPath();
+  ctx.ellipse(x + w / 2, C.GROUND_Y + 3, w / 2, 4, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
 
 // Bus: only the body (top 58px of its 88px height) collides; the gap
 // underneath is duckable.
@@ -32,9 +42,6 @@ export class Obstacle {
     }
     this.pair = type === 'cone' && rng.chance(0.3);
     if (this.pair) this.w = def.w * 2 + 14;
-    // Squirrel darting state
-    this.dartPhase = 0;
-    this.dartTimer = rng ? rng.range(0.25, 0.45) : 0.3;
     this.hornPlayed = false;
   }
 
@@ -44,14 +51,6 @@ export class Obstacle {
     let vx = -speed;
     if (this.type === 'cab') vx = -speed * (1 + this.def.speedMult);
     if (this.type === 'bus') vx = -speed * 1.25;
-    if (this.type === 'squirrel') {
-      this.dartTimer -= dt;
-      if (this.dartTimer <= 0) {
-        this.dartPhase = (this.dartPhase + 1) % 2;
-        this.dartTimer = this.dartPhase === 0 ? 0.35 : 0.22;
-      }
-      vx = this.dartPhase === 0 ? -speed * 1.45 : -speed * 0.55;
-    }
     this.x += vx * dt;
     if (this.x + this.w < -60) this.active = false;
   }
@@ -84,13 +83,14 @@ export class Obstacle {
         }
         break;
       }
-      case 'cab': drawMatrix(ctx, CAB, x, this.y, s); break;
-      case 'squirrel': {
-        const f = this.dartPhase === 0 ? SQUIRREL_1 : SQUIRREL_2;
-        drawMatrix(ctx, f, x, this.y, s);
+      case 'cab':
+        drawShadow(ctx, x, this.w);
+        drawMatrix(ctx, CAB, x, this.y, s);
         break;
-      }
-      case 'bus': drawMatrix(ctx, BUS, x, this.y, s); break;
+      case 'bus':
+        drawShadow(ctx, x, this.w);
+        drawMatrix(ctx, BUS, x, this.y, s);
+        break;
       case 'puddle': {
         ctx.fillStyle = PALETTE.wet;
         ctx.globalAlpha = 0.8;
