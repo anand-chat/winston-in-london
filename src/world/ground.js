@@ -15,25 +15,25 @@ export function renderGround(ctx, scrollX, wetness) {
   ctx.fillStyle = '#B7AD9C';
   ctx.fillRect(0, GROUND_Y + 4, LOGICAL_WIDTH, 2);
 
-  // Cobbles: staggered rounded rects
+  // Paving: subtle wide slabs, low contrast
   const off = ((scrollX % TILE_W) + TILE_W) % TILE_W;
-  ctx.fillStyle = '#98A0AA';
-  for (let row = 0; row < 4; row++) {
-    const y = GROUND_Y + 10 + row * 12;
-    const stagger = row % 2 ? 9 : 0;
-    for (let x = -off - TILE_W + stagger; x < LOGICAL_WIDTH + TILE_W; x += 18) {
-      ctx.fillRect(x + 1, y, 15, 8);
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  for (let row = 0; row < 3; row++) {
+    const y = GROUND_Y + 12 + row * 16;
+    const stagger = row % 2 ? 24 : 0;
+    for (let x = -off - TILE_W + stagger; x < LOGICAL_WIDTH + TILE_W; x += 48) {
+      ctx.fillRect(x + 1, y, 44, 12);
     }
   }
 
-  // Drain grates every tile
-  ctx.fillStyle = '#3F4650';
+  // Drain grates every tile, softened
+  ctx.fillStyle = 'rgba(63,70,80,0.55)';
   for (let x = -off; x < LOGICAL_WIDTH + TILE_W; x += TILE_W) {
     const gx = x + 150;
     ctx.fillRect(gx, GROUND_Y + 5, 34, 6);
-    ctx.fillStyle = '#2C323A';
+    ctx.fillStyle = 'rgba(44,50,58,0.55)';
     for (let i = 0; i < 5; i++) ctx.fillRect(gx + 3 + i * 6, GROUND_Y + 6, 3, 4);
-    ctx.fillStyle = '#3F4650';
+    ctx.fillStyle = 'rgba(63,70,80,0.55)';
   }
 
   // Wet sheen when raining

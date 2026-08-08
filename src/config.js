@@ -2,7 +2,6 @@
 
 // Personal messages (easy to change)
 export const GAME_TITLE = 'Winston in London';
-export const SUBTITLE = 'A game about a very good boy';
 export const SECRET_MESSAGE = 'I love you more than ball';
 
 // Canvas
@@ -92,7 +91,11 @@ export const MILESTONES = [
 export const HIGH_SCORE_KEY = 'winston_high_score';
 export const MUTE_KEY = 'winston_muted';
 
-// Dying sequence
+// Lives: Winston gets a second chance before the run ends
+export const LIVES = 2;
+export const SECOND_CHANCE_INVULN_SEC = 1.5;
+
+// Catch sequence (run end)
 export const DYING_MS = 900;
 
 // Particles

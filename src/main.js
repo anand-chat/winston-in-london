@@ -52,7 +52,7 @@ resize();
 const overlayTitle = document.getElementById('title-overlay');
 const overlayGameOver = document.getElementById('gameover-overlay');
 const overlayPause = document.getElementById('pause-overlay');
-const goScore = document.getElementById('go-score');
+const goSteps = document.getElementById('go-steps');
 const goRecord = document.getElementById('go-record');
 const titleHi = document.getElementById('title-hi');
 const btnMute = document.getElementById('btn-mute');
@@ -76,7 +76,7 @@ function syncOverlays(state) {
     titleHi.textContent = game.highScore > 0 ? `HI ${pad5(game.highScore)}` : '';
   }
   if (state === 'GAME_OVER') {
-    goScore.textContent = `Winston ran ${Math.floor(game.score).toLocaleString()} steps`;
+    goSteps.textContent = `after ${Math.floor(game.score).toLocaleString()} steps`;
     goRecord.hidden = !game.newRecord;
   }
 }
@@ -112,7 +112,7 @@ btnAgain.addEventListener('click', (e) => {
 });
 btnShare.addEventListener('click', async (e) => {
   e.stopPropagation();
-  const text = `Winston ran ${Math.floor(game.score).toLocaleString()} steps through London. Beat that. ${location.href}`;
+  const text = `Winston caught his ball after ${Math.floor(game.score).toLocaleString()} steps through London. Beat that. ${location.href}`;
   let shared = false;
   try {
     if (navigator.share) {

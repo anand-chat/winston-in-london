@@ -54,6 +54,30 @@ test('restart from game over resets score to zero', async ({ page }) => {
   expect(s.score).toBeLessThan(50);
 });
 
+test('second chance: first collision costs a life, run continues', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => window.__game !== undefined);
+  const r = await page.evaluate(() => {
+    const g = window.__game;
+    g.setSeed(6);
+    g.tick(500);
+    const livesBefore = g.getState().lives;
+    // Run into the first obstacle without jumping
+    let hitState = null;
+    for (let t = 0; t < 20000; t += 100) {
+      g.tick(100);
+      const s = g.getState();
+      if (s.lives < livesBefore) { hitState = s; break; }
+      if (s.state !== 'PLAYING') return { ended: s.state, livesBefore };
+    }
+    return { livesBefore, afterHit: hitState && { lives: hitState.lives, state: hitState.state } };
+  });
+  expect(r.livesBefore).toBe(2);
+  expect(r.afterHit).not.toBeNull();
+  expect(r.afterHit.lives).toBe(1);
+  expect(r.afterHit.state).toBe('PLAYING');
+});
+
 test('no console errors after 60 seconds of simulated play', async ({ page }) => {
   const errors = collectErrors(page);
   await page.goto('/');

@@ -4,6 +4,20 @@ const MONO = '600 16px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
 
 export function pad5(n) { return String(Math.floor(n)).padStart(5, '0'); }
 
+function drawHeart(ctx, cx, cy, r, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(cx - r / 2, cy - r / 4, r / 1.8, 0, Math.PI * 2);
+  ctx.arc(cx + r / 2, cy - r / 4, r / 1.8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(cx - r, cy - r / 8);
+  ctx.lineTo(cx, cy + r);
+  ctx.lineTo(cx + r, cy - r / 8);
+  ctx.closePath();
+  ctx.fill();
+}
+
 export class Hud {
   constructor() {
     this.toasts = []; // { text, t }
@@ -26,7 +40,7 @@ export class Hud {
     if (this.scoreFlash > 0) this.scoreFlash -= dt;
   }
 
-  render(ctx, score, highScore) {
+  render(ctx, score, highScore, lives) {
     ctx.font = MONO;
     ctx.textBaseline = 'top';
     ctx.textAlign = 'right';
@@ -37,6 +51,13 @@ export class Hud {
     const flashing = this.scoreFlash > 0 && Math.floor(this.scoreFlash * 10) % 2 === 0;
     ctx.fillStyle = flashing ? '#C0322B' : '#1B1B1F';
     ctx.fillText(pad5(score), LOGICAL_WIDTH - 20, 14);
+
+    // Remaining chances as little hearts, top-left
+    if (lives !== undefined) {
+      for (let i = 0; i < lives; i++) {
+        drawHeart(ctx, 20 + i * 22, 16, 7, '#E8748A');
+      }
+    }
 
     // Milestone toasts float up and fade
     ctx.textAlign = 'center';

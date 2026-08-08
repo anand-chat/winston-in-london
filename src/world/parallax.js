@@ -21,32 +21,33 @@ const MID_TILE = 520;
 const FURN_TILE = 460;
 
 function drawTerraceRow(ctx, x, duskT) {
-  // Georgian terrace: brick + stone, chimney pots, sash windows.
+  // Georgian terrace: soft pastel fronts, chimney pots, sash windows.
   const baseY = GROUND_Y;
   const houses = [
-    { w: 100, h: 96,  c: PALETTE.brick },
-    { w: 84,  h: 82,  c: PALETTE.stone },
-    { w: 108, h: 104, c: '#8A4238' },
-    { w: 92,  h: 88,  c: PALETTE.brick },
+    { w: 100, h: 96,  c: '#C4A9A2' },
+    { w: 84,  h: 82,  c: '#CFC7B8' },
+    { w: 108, h: 104, c: '#B79C93' },
+    { w: 92,  h: 88,  c: '#C9B4A6' },
   ];
   let hx = x;
+  let houseIdx = 0;
   for (const hme of houses) {
     ctx.fillStyle = hme.c;
     ctx.fillRect(hx, baseY - hme.h, hme.w, hme.h);
     // Roof line + chimney pots
-    ctx.fillStyle = PALETTE.slate;
+    ctx.fillStyle = '#8B939C';
     ctx.fillRect(hx - 2, baseY - hme.h - 8, hme.w + 4, 8);
     ctx.fillRect(hx + 12, baseY - hme.h - 22, 10, 14);
     ctx.fillRect(hx + hme.w - 26, baseY - hme.h - 22, 10, 14);
-    // Sash windows, some lit
+    // Sash windows — lit pattern is fixed per window so nothing flickers
     for (let row = 0; row < 2; row++) {
       for (let col = 0; col < Math.floor(hme.w / 34); col++) {
         const wx = hx + 12 + col * 34;
         const wy = baseY - hme.h + 18 + row * 38;
-        const lit = ((hx * 7 + row * 13 + col * 29) % 11) < (2 + duskT * 6);
-        ctx.fillStyle = lit ? `rgba(232,163,61,${0.5 + duskT * 0.5})` : 'rgba(35,38,44,0.6)';
+        const lit = ((houseIdx * 7 + row * 13 + col * 29) % 11) < 2 + Math.round(duskT * 3);
+        ctx.fillStyle = lit ? 'rgba(232,190,120,0.55)' : 'rgba(90,98,110,0.35)';
         ctx.fillRect(wx, wy, 14, 22);
-        ctx.strokeStyle = 'rgba(245,239,227,0.5)';
+        ctx.strokeStyle = 'rgba(245,239,227,0.35)';
         ctx.lineWidth = 1;
         ctx.strokeRect(wx, wy, 14, 22);
         ctx.beginPath();
@@ -55,6 +56,7 @@ function drawTerraceRow(ctx, x, duskT) {
       }
     }
     hx += hme.w + 34;
+    houseIdx++;
   }
   // A little Union Jack on one house
   ctx.fillStyle = '#3B4B8C';
@@ -157,7 +159,7 @@ export class Parallax {
     ctx.fillRect(0, 0, LOGICAL_WIDTH, GROUND_Y);
 
     // Clouds
-    ctx.fillStyle = 'rgba(245,239,227,0.5)';
+    ctx.fillStyle = 'rgba(245,239,227,0.35)';
     for (const c of this.clouds) {
       ctx.beginPath();
       ctx.ellipse(c.x, c.y, c.w / 2, 12, 0, 0, Math.PI * 2);
@@ -171,7 +173,7 @@ export class Parallax {
     // Layer 3: mid buildings
     const midOff = ((this.scroll * 0.35) % MID_TILE + MID_TILE) % MID_TILE;
     ctx.save();
-    ctx.globalAlpha = 0.55;
+    ctx.globalAlpha = 0.45;
     for (let i = -1; i <= Math.ceil(LOGICAL_WIDTH / MID_TILE) + 1; i++) {
       drawTerraceRow(ctx, i * MID_TILE - midOff, duskT);
     }

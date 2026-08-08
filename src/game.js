@@ -11,6 +11,7 @@ import { Hud, pad5 } from './hud.js';
 import { audio } from './audio.js';
 import { storageGet, storageSet } from './storage.js';
 
+// DYING is the happy "catching the ball" transition into GAME_OVER.
 const STATES = ['BOOT', 'TITLE', 'COUNTDOWN', 'PLAYING', 'DYING', 'GAME_OVER', 'PAUSED'];
 const WEATHERS = ['bright', 'overcast', 'drizzle'];
 
@@ -56,7 +57,8 @@ export class Game {
     this.pickups.clear();
     this.hud.reset();
     this.dyingT = 0;
-    this.shake = 0;
+    this.lives = C.LIVES;
+    this.invulnT = 0;
     this.countdownT = 0;
     this.pendingBusHorn = null;
     this.newRecord = false;
@@ -138,7 +140,6 @@ export class Game {
         break;
       case 'DYING': {
         this.dyingT += dt;
-        this.shake = Math.max(0, 6 * (1 - this.dyingT / (C.DYING_MS / 1000)));
         if (this.dyingT * 1000 >= C.DYING_MS) {
           this.ball.rollToStop(this.winston.x + 40);
           this.setState('GAME_OVER');
@@ -219,6 +220,7 @@ export class Game {
     }
 
     // Obstacles
+    if (this.invulnT > 0) this.invulnT -= dt;
     const wbox = this.winston.hitbox();
     this.obstacles.forEach(o => {
       o.update(dt, this.speed);
@@ -233,6 +235,15 @@ export class Game {
           this.winston.shield = false;
           this.particles.emit('heart', this.winston.x + 20, this.winston.y - 30, 12, this.rng);
           audio.shieldBreak();
+        } else if (this.invulnT > 0) {
+          // brushing past during a second chance — no harm done
+        } else if (this.lives > 1) {
+          this.lives--;
+          this.invulnT = C.SECOND_CHANCE_INVULN_SEC;
+          o.hit = true;
+          this.hud.toast('Winston shakes it off!');
+          this.particles.emit('sparkle', this.winston.x + 20, this.winston.y - 30, 10, this.rng);
+          audio.bark();
         } else {
           this.die();
         }
@@ -355,11 +366,14 @@ export class Game {
     this.obstacles.spawn('bus', C.LOGICAL_WIDTH + 40, this.rng);
   }
 
+  // The run ends happily: Winston finally catches up with his ball.
   die() {
     this.setState('DYING');
     this.dyingT = 0;
-    audio.yelp();
-    this.particles.emit('dust', this.winston.x + 20, C.GROUND_Y, 12, this.rng);
+    audio.bark();
+    audio.heart();
+    this.particles.emit('heart', this.winston.x + 20, this.winston.y - 40, 10, this.rng);
+    this.particles.emit('sparkle', this.winston.x + 30, this.winston.y - 20, 8, this.rng);
   }
 
   // --- Autopilot (perfect-play bot for solvability tests) ---
@@ -420,10 +434,6 @@ export class Game {
     const duskT = Math.min(1, this.score / 1800);
 
     ctx.save();
-    if (this.shake > 0 && !this.reducedMotion) {
-      // Cosmetic only — must not consume the seeded RNG
-      ctx.translate((Math.random() - 0.5) * this.shake * 2, (Math.random() - 0.5) * this.shake * 2);
-    }
 
     this.parallax.render(ctx, this.time, duskT, this.darken, this.wetness, this.reducedMotion);
 
@@ -435,25 +445,16 @@ export class Game {
     // Winston + ball
     let anim = null;
     if (this.state === 'TITLE' || this.state === 'COUNTDOWN') anim = 'idle';
-    if (this.state === 'DYING') anim = 'hurt';
-    if (this.state === 'GAME_OVER') anim = 'catch';
-    this.winston.render(ctx, alpha, speedFrac, this.state, anim);
+    if (this.state === 'DYING' || this.state === 'GAME_OVER') anim = 'catch';
+    // Blink during second-chance invulnerability
+    const blinking = this.invulnT > 0 && Math.floor(this.invulnT * 10) % 2 === 0;
+    if (!blinking) this.winston.render(ctx, alpha, speedFrac, this.state, anim);
     this.ball.render(ctx);
 
     this.particles.render(ctx);
 
-    // Desaturation on death
-    if ((this.state === 'DYING' || this.state === 'GAME_OVER') && this.dyingT > 0) {
-      ctx.globalAlpha = Math.min(0.4, this.dyingT);
-      ctx.fillStyle = '#808488';
-      ctx.globalCompositeOperation = 'saturation';
-      ctx.fillRect(0, 0, C.LOGICAL_WIDTH, C.LOGICAL_HEIGHT);
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.globalAlpha = 1;
-    }
-
     if (this.state === 'PLAYING' || this.state === 'DYING' || this.state === 'PAUSED') {
-      this.hud.render(ctx, this.score, this.highScore);
+      this.hud.render(ctx, this.score, this.highScore, this.lives);
     }
 
     if (this.showHitboxes) {
@@ -490,6 +491,7 @@ export class Game {
         hitbox: this.winston.hitbox(),
         shield: this.winston.shield,
       },
+      lives: this.lives,
       obstacles: obs,
       wetness: this.wetness,
       entityCount: this.obstacles.count() + this.pickups.count() + this.particles.count(),

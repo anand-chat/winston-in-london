@@ -73,15 +73,9 @@ export class Obstacle {
         if (this.pair) drawMatrix(ctx, CONE, x + this.def.w + 14, this.y, s);
         break;
       case 'phonebox': drawMatrix(ctx, PHONEBOX, x, this.y, s); break;
-      case 'bin': {
-        // Lid rattle
-        const rattle = Math.sin(this.t * 22) > 0.7 ? -2 : 0;
-        ctx.save();
-        ctx.translate(0, rattle);
+      case 'bin':
         drawMatrix(ctx, BIN, x, this.y, s);
-        ctx.restore();
         break;
-      }
       case 'pigeons': {
         const f = Math.floor(this.t * 10) % 2 ? PIGEON_1 : PIGEON_2;
         for (let i = 0; i < 3; i++) {

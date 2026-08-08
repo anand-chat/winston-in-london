@@ -4,7 +4,8 @@ An endless runner about a very good boy. Winston — a long-haired black-and-whi
 Chihuahua — chases his lime tennis ball through London, jumping over traffic
 cones, phone boxes, bins, black cabs and squirrels, and ducking under pigeons
 and double-decker buses. The city speeds up the longer he runs. When the run
-ends, Winston finally catches the ball.
+ends, Winston finally catches the ball — a happy ending, every time. He gets
+a second chance on his first bump (shown as hearts in the corner).
 
 Every pixel is drawn programmatically on an HTML5 canvas and every sound is
 synthesized with the Web Audio API — no image files, no audio files, no fonts,
@@ -41,7 +42,8 @@ All gameplay constants live in `src/config.js`:
   `COYOTE_TIME_MS`, `JUMP_BUFFER_MS`.
 - **Difficulty** — `SPEED_START`, `SPEED_MAX`, `SPEED_GAIN` (px/s gained per
   100 points), `GAP_MIN_SEC` / `GAP_MAX_SEC` (spawn gaps in seconds of travel),
-  and per-obstacle `unlock` score thresholds in `OBSTACLES`.
+  `LIVES` (second chances), and per-obstacle `unlock` score thresholds in
+  `OBSTACLES`.
 - **Colors** — the full palette is in `src/sprites/palette.js`.
 
 ## Messages
