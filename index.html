@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Winston in London</title>
+  <meta name="description" content="Help Winston the Chihuahua chase his ball through London." />
+  <meta property="og:title" content="Winston in London" />
+  <meta property="og:description" content="A very good boy is chasing his ball through London. Help him run." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="stage">
+    <canvas id="game" aria-label="Winston in London: an endless runner game. Press space or tap to jump, down arrow or hold the bottom of the screen to duck."></canvas>
+
+    <div class="hud-buttons">
+      <button id="btn-pause" class="icon-btn" aria-label="Pause" hidden>&#10074;&#10074;</button>
+      <button id="btn-mute" class="icon-btn" aria-label="Mute">&#128266;</button>
+    </div>
+
+    <div id="title-overlay" class="overlay">
+      <h1>Winston in London</h1>
+      <p class="subtitle">A game about a very good boy</p>
+      <p id="title-hi" class="hi-score"></p>
+      <p class="prompt">Press Space or tap to run</p>
+    </div>
+
+    <div id="gameover-overlay" class="overlay panel" hidden>
+      <h2 id="go-score">Winston ran 0 steps</h2>
+      <p id="go-record" class="record" hidden>New record! &#127934;</p>
+      <div class="btn-row">
+        <button id="btn-again" class="text-btn">Run again</button>
+        <button id="btn-share" class="text-btn">Share</button>
+      </div>
+      <p id="copied-toast" class="copied" hidden>Copied</p>
+    </div>
+
+    <div id="pause-overlay" class="overlay" hidden>
+      <p class="prompt">Paused &mdash; Winston is having a sniff</p>
+    </div>
+  </main>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
