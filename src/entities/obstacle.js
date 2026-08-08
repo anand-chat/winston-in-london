@@ -68,11 +68,16 @@ export class Obstacle {
     const s = C.PIXEL_SCALE;
     switch (this.type) {
       case 'cone':
+        drawShadow(ctx, x, this.w);
         drawMatrix(ctx, CONE, x, this.y, s);
         if (this.pair) drawMatrix(ctx, CONE, x + this.def.w + 14, this.y, s);
         break;
-      case 'phonebox': drawMatrix(ctx, PHONEBOX, x, this.y, s); break;
+      case 'phonebox':
+        drawShadow(ctx, x, this.w);
+        drawMatrix(ctx, PHONEBOX, x, this.y, s);
+        break;
       case 'bin':
+        drawShadow(ctx, x, this.w);
         drawMatrix(ctx, BIN, x, this.y, s);
         break;
       case 'pigeons': {

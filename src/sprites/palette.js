@@ -10,9 +10,9 @@ export const PALETTE = {
   brick:    '#9A4B3F',
   slate:    '#4A5560',
   stone:    '#D6CDBD',
-  sky1:     '#BFD4DE', // horizon
-  sky2:     '#8FAFC4', // zenith
-  red:      '#C0322B', // phone box, bus
+  sky1:     '#D3E2E8', // horizon
+  sky2:     '#8FB2CC', // zenith
+  red:      '#D6392C', // phone box, bus
   black:    '#232326', // taxi
   moss:     '#5E7A55',
   wet:      '#7C8C99', // puddles, rain
@@ -35,9 +35,9 @@ export const CHAR_MAP = {
   M: PALETTE.moss,
   W: PALETTE.wet,
   D: PALETTE.black,
-  G: '#B8B4AC', // grey (bin, squirrel)
-  X: '#8A2A24', // dark red shade
-  Y: '#E8A33D', // amber (windows, cone stripe)
+  G: '#5F7D4F', // green (litter bin)
+  X: '#96271F', // dark red shade
+  Y: '#F2B33D', // amber (windows, cone stripe)
   Z: '#3A3F46', // dark slate shade
 };
 

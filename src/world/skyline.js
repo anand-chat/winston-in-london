@@ -114,8 +114,8 @@ export const SKYLINE_TOTAL_W = LANDMARKS.length * SEGMENT_W; // 3400px, >90s at 
 
 export function renderSkyline(ctx, scrollX, t, darken) {
   ctx.save();
-  ctx.globalAlpha = 0.35;
-  ctx.fillStyle = darken ? '#4A545E' : '#6B7885';
+  ctx.globalAlpha = 0.45;
+  ctx.fillStyle = darken ? '#46525E' : '#63758A';
   ctx.strokeStyle = ctx.fillStyle;
   const offset = ((scrollX % SKYLINE_TOTAL_W) + SKYLINE_TOTAL_W) % SKYLINE_TOTAL_W;
   for (let i = -1; i <= Math.ceil(LOGICAL_WIDTH / SEGMENT_W) + 1; i++) {

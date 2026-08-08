@@ -24,21 +24,31 @@ function drawTerraceRow(ctx, x, duskT) {
   // Georgian terrace: soft pastel fronts, chimney pots, sash windows.
   const baseY = GROUND_Y;
   const houses = [
-    { w: 100, h: 96,  c: '#C4A9A2' },
-    { w: 84,  h: 82,  c: '#CFC7B8' },
-    { w: 108, h: 104, c: '#B79C93' },
-    { w: 92,  h: 88,  c: '#C9B4A6' },
+    { w: 100, h: 96,  c: '#D9B8AE', d: '#3B4B8C' },
+    { w: 84,  h: 82,  c: '#E3DACB', d: '#2E5940' },
+    { w: 108, h: 104, c: '#C7A196', d: '#8C3B3B' },
+    { w: 92,  h: 88,  c: '#DCC3B0', d: '#2E3338' },
   ];
   let hx = x;
   let houseIdx = 0;
   for (const hme of houses) {
     ctx.fillStyle = hme.c;
     ctx.fillRect(hx, baseY - hme.h, hme.w, hme.h);
-    // Roof line + chimney pots
+    // White ground-floor band (classic stucco)
+    ctx.fillStyle = 'rgba(245,239,227,0.55)';
+    ctx.fillRect(hx, baseY - 26, hme.w, 26);
+    // Cornice + roof line + chimney pots
+    ctx.fillStyle = 'rgba(245,239,227,0.7)';
+    ctx.fillRect(hx - 1, baseY - hme.h + 2, hme.w + 2, 3);
     ctx.fillStyle = '#8B939C';
     ctx.fillRect(hx - 2, baseY - hme.h - 8, hme.w + 4, 8);
     ctx.fillRect(hx + 12, baseY - hme.h - 22, 10, 14);
     ctx.fillRect(hx + hme.w - 26, baseY - hme.h - 22, 10, 14);
+    // Front door with fanlight
+    ctx.fillStyle = hme.d;
+    ctx.fillRect(hx + hme.w / 2 - 7, baseY - 22, 14, 22);
+    ctx.fillStyle = 'rgba(232,190,120,0.6)';
+    ctx.fillRect(hx + hme.w / 2 - 5, baseY - 26, 10, 3);
     // Sash windows — lit pattern is fixed per window so nothing flickers
     for (let row = 0; row < 2; row++) {
       for (let col = 0; col < Math.floor(hme.w / 34); col++) {
@@ -179,6 +189,18 @@ function drawFurniture(ctx, x, variant, t, duskT) {
       ctx.fillRect(x + 82, baseY - 104, 20, 12);
       break;
     }
+    case 5: { // Royal Mail pillar box
+      ctx.fillStyle = '#D6392C';
+      ctx.fillRect(x + 6, baseY - 40, 20, 40);
+      ctx.beginPath();
+      ctx.arc(x + 16, baseY - 40, 10, Math.PI, 0);
+      ctx.fill();
+      ctx.fillStyle = '#96271F';
+      ctx.fillRect(x + 9, baseY - 32, 14, 3);
+      ctx.fillStyle = '#2E3338';
+      ctx.fillRect(x + 4, baseY - 4, 24, 4);
+      break;
+    }
     case 4: { // Park bench
       ctx.fillStyle = '#4C6B45';
       for (let i = 0; i < 4; i++) ctx.fillRect(x + i * 3, baseY - 40 + i * 3, 44, 2);
@@ -235,7 +257,7 @@ export class Parallax {
     // Layer 3: mid buildings, with park stretches every third tile
     const midOff = ((this.scroll * 0.35) % MID_TILE + MID_TILE) % MID_TILE;
     ctx.save();
-    ctx.globalAlpha = 0.45;
+    ctx.globalAlpha = 0.6;
     for (let i = -1; i <= Math.ceil(LOGICAL_WIDTH / MID_TILE) + 1; i++) {
       const worldIdx = Math.floor((this.scroll * 0.35) / MID_TILE) + i;
       const kind = ((worldIdx % 3) + 3) % 3;
@@ -246,11 +268,11 @@ export class Parallax {
     ctx.restore();
 
     // Layer 4: street furniture
-    const fOff = ((this.scroll * 0.75) % (FURN_TILE * 5) + FURN_TILE * 5) % (FURN_TILE * 5);
+    const fOff = ((this.scroll * 0.75) % (FURN_TILE * 6) + FURN_TILE * 6) % (FURN_TILE * 6);
     for (let i = -1; i <= Math.ceil(LOGICAL_WIDTH / FURN_TILE) + 4; i++) {
       const worldIdx = Math.floor((this.scroll * 0.75) / FURN_TILE) + i;
       const x = i * FURN_TILE - (fOff % FURN_TILE);
-      const variant = ((worldIdx % 5) + 5) % 5;
+      const variant = ((worldIdx % 6) + 6) % 6;
       if (x > -120 && x < LOGICAL_WIDTH + 120) drawFurniture(ctx, x, variant, t, duskT);
     }
 

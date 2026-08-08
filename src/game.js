@@ -445,9 +445,17 @@ export class Game {
     let anim = null;
     if (this.state === 'TITLE' || this.state === 'COUNTDOWN') anim = 'idle';
     if (this.state === 'DYING' || this.state === 'GAME_OVER') anim = 'catch';
-    // Blink during second-chance invulnerability
-    const blinking = this.invulnT > 0 && Math.floor(this.invulnT * 10) % 2 === 0;
-    if (!blinking) this.winston.render(ctx, alpha, speedFrac, this.state, anim);
+    // Soft protective halo during second-chance invulnerability (no flicker)
+    if (this.invulnT > 0) {
+      ctx.save();
+      ctx.globalAlpha = 0.25 * Math.min(1, this.invulnT / 0.4);
+      ctx.fillStyle = '#F2C464';
+      ctx.beginPath();
+      ctx.ellipse(this.winston.x + 23, this.winston.y - 20, 34, 28, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    this.winston.render(ctx, alpha, speedFrac, this.state, anim);
     this.ball.render(ctx);
 
     this.particles.render(ctx);
