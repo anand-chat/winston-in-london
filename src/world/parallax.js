@@ -188,8 +188,10 @@ function drawFurniture(ctx, x, variant, t, duskT) {
       ctx.fillStyle = '#2E3338';
       for (let i = 0; i < 3; i++) ctx.fillRect(x + i * 26, baseY - 22, 8, 22);
       ctx.fillRect(x + 90, baseY - 96, 4, 96);
-      ctx.fillStyle = '#4A5560';
+      ctx.fillStyle = '#C0322B';
       ctx.fillRect(x + 82, baseY - 104, 20, 12);
+      ctx.fillStyle = '#F5EFE3';
+      ctx.fillRect(x + 85, baseY - 100, 14, 4);
       break;
     }
     case 4: { // Park bench
@@ -199,6 +201,21 @@ function drawFurniture(ctx, x, variant, t, duskT) {
       ctx.fillStyle = '#2E3338';
       ctx.fillRect(x + 12, baseY - 22, 4, 22);
       ctx.fillRect(x + 44, baseY - 22, 4, 22);
+      break;
+    }
+    case 5: { // Underground roundel
+      ctx.fillStyle = '#2E3338';
+      ctx.fillRect(x + 14, baseY - 92, 4, 92);
+      ctx.fillStyle = '#C0322B';
+      ctx.beginPath();
+      ctx.arc(x + 16, baseY - 96, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#F5EFE3';
+      ctx.beginPath();
+      ctx.arc(x + 16, baseY - 96, 9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#2B4B9B';
+      ctx.fillRect(x - 4, baseY - 100, 40, 8);
       break;
     }
   }
@@ -233,6 +250,38 @@ export class Parallax {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, LOGICAL_WIDTH, GROUND_Y);
 
+    // Sun by day, moon and stars by night (fixed positions, no flicker)
+    if (duskT < 0.55) {
+      ctx.save();
+      ctx.globalAlpha = 0.5 * (1 - duskT / 0.55);
+      ctx.fillStyle = '#F7EBC8';
+      ctx.beginPath();
+      ctx.arc(LOGICAL_WIDTH - 140, 64, 26, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    if (duskT > 0.45) {
+      const nt = (duskT - 0.45) / 0.55;
+      ctx.save();
+      ctx.globalAlpha = 0.75 * nt;
+      ctx.fillStyle = '#F0EEDF';
+      ctx.beginPath();
+      ctx.arc(150, 60, 18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = lerpColor(PALETTE.sky2, DUSK_TOP, duskT);
+      ctx.beginPath();
+      ctx.arc(158, 54, 15, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 0.7 * nt;
+      ctx.fillStyle = '#F5EFE3';
+      for (let si = 0; si < 26; si++) {
+        const sx = ((si * 173) % LOGICAL_WIDTH);
+        const sy = 12 + ((si * 97) % 130);
+        ctx.fillRect(sx, sy, 2, 2);
+      }
+      ctx.restore();
+    }
+
     // Clouds
     ctx.fillStyle = 'rgba(245,239,227,0.35)';
     for (const c of this.clouds) {
@@ -259,11 +308,11 @@ export class Parallax {
     ctx.restore();
 
     // Layer 4: street furniture
-    const fOff = ((this.scroll * 0.75) % (FURN_TILE * 5) + FURN_TILE * 5) % (FURN_TILE * 5);
+    const fOff = ((this.scroll * 0.75) % (FURN_TILE * 6) + FURN_TILE * 6) % (FURN_TILE * 6);
     for (let i = -1; i <= Math.ceil(LOGICAL_WIDTH / FURN_TILE) + 4; i++) {
       const worldIdx = Math.floor((this.scroll * 0.75) / FURN_TILE) + i;
       const x = i * FURN_TILE - (fOff % FURN_TILE);
-      const variant = ((worldIdx % 5) + 5) % 5;
+      const variant = ((worldIdx % 6) + 6) % 6;
       if (x > -120 && x < LOGICAL_WIDTH + 120) drawFurniture(ctx, x, variant, t, duskT);
     }
 
