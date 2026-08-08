@@ -15,6 +15,7 @@ import { storageGet, storageSet } from './storage.js';
 // DYING is the happy "catching the ball" transition into GAME_OVER.
 const STATES = ['BOOT', 'TITLE', 'COUNTDOWN', 'PLAYING', 'DYING', 'GAME_OVER', 'PAUSED'];
 const WEATHERS = ['bright', 'overcast', 'drizzle'];
+const DOG_COLORS = { Winston: '#2E2B33', Mocca: '#C9A87C', Maui: '#4A4E57' };
 const SKIN_SWAPS = [
   { score: 500,  skin: 'mocca' },
   { score: 1000, skin: 'maui' },
@@ -481,7 +482,10 @@ export class Game {
     this.particles.render(ctx);
 
     if (this.state === 'PLAYING' || this.state === 'DYING' || this.state === 'PAUSED') {
-      this.hud.render(ctx, this.score, this.highScore, this.lives);
+      this.hud.render(ctx, this.score, this.highScore, this.lives, {
+        name: this.dogName(),
+        color: DOG_COLORS[this.dogName()],
+      });
     }
 
     if (this.showHitboxes) {

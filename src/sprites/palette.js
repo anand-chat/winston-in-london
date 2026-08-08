@@ -46,7 +46,7 @@ export const CHAR_MAP = {
 export const SKINS = {
   winston: null,
   mocca: { K: '#C9A87C', F: '#AD8B5D' }, // beige & white
-  maui:  { K: '#8B9099', F: '#6E747E' }, // grey & white
+  maui:  { K: '#4A4E57', F: '#33363D' }, // dark grey & white
 };
 
 export function drawMatrix(ctx, matrix, x, y, scale, remap) {
