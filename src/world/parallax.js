@@ -166,26 +166,29 @@ function drawFurniture(ctx, x, variant, t, duskT) {
       ctx.fill();
       break;
     }
-    case 2: { // Underground roundel
+    case 2: { // Street clock
       ctx.fillStyle = '#2E3338';
       ctx.fillRect(x + 14, baseY - 92, 4, 92);
-      ctx.fillStyle = '#C0322B';
       ctx.beginPath();
-      ctx.arc(x + 16, baseY - 96, 16, 0, Math.PI * 2);
+      ctx.arc(x + 16, baseY - 96, 14, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#F5EFE3';
       ctx.beginPath();
-      ctx.arc(x + 16, baseY - 96, 9, 0, Math.PI * 2);
+      ctx.arc(x + 16, baseY - 96, 10, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#2B4B9B';
-      ctx.fillRect(x - 4, baseY - 100, 40, 8);
+      ctx.strokeStyle = '#2E3338';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x + 16, baseY - 96); ctx.lineTo(x + 16, baseY - 103);
+      ctx.moveTo(x + 16, baseY - 96); ctx.lineTo(x + 21, baseY - 94);
+      ctx.stroke();
       break;
     }
     case 3: { // Bollards + bus stop
       ctx.fillStyle = '#2E3338';
       for (let i = 0; i < 3; i++) ctx.fillRect(x + i * 26, baseY - 22, 8, 22);
       ctx.fillRect(x + 90, baseY - 96, 4, 96);
-      ctx.fillStyle = '#C0322B';
+      ctx.fillStyle = '#4A5560';
       ctx.fillRect(x + 82, baseY - 104, 20, 12);
       break;
     }
