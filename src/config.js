@@ -26,8 +26,8 @@ export const SPEED_GAIN = 12;      // px/s added per 100 points
 export const SCORE_RATE = 10;      // points per second at SPEED_START, scales with speed
 
 // Obstacle spawning
-export const GAP_MIN_SEC = 0.62;
-export const GAP_MAX_SEC = 1.45;
+export const GAP_MIN_SEC = 0.78;
+export const GAP_MAX_SEC = 1.65;
 export const DUCK_AFTER_JUMP_MIN_SEC = 0.9;
 
 // Fixed timestep

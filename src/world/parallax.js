@@ -18,7 +18,7 @@ const DUSK_TOP = '#5C6B8A';
 const DUSK_BOT = '#C98A5E';
 
 const MID_TILE = 520;
-const FURN_TILE = 460;
+const FURN_TILE = 620;
 
 function drawTerraceRow(ctx, x, duskT) {
   // Georgian terrace: soft pastel fronts, chimney pots, sash windows.
