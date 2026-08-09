@@ -49,6 +49,7 @@ export const SKINS = {
   mocca: { K: '#C9A87C', F: '#AD8B5D' }, // beige & white
   maui:  { K: '#4A4E57', F: '#33363D' }, // dark grey & white
   max:   { K: '#2B2620', F: '#8A5A2B', C: '#D9A05B' }, // German Shepherd tan & black
+  simba: { K: '#D9A249', F: '#B9823A', C: '#F0D9A6' }, // fluffy Golden Retriever
 };
 
 export function drawMatrix(ctx, matrix, x, y, scale, remap) {

@@ -227,6 +227,16 @@ export const SAUSAGE = [ // 11 x 5 -> 22x10
   '.XXXX.XXXX.',
 ];
 
+export const DRUMSTICK = [ // 11 x 7 -> 22x14
+  '.TTTT......',
+  'TTTTTT.....',
+  'TTTTTTTC...',
+  'TTTTTTTCCC.',
+  'TTTTTTTC.CC',
+  'TTTTTT..CC.',
+  '.TTTT......',
+];
+
 export const HEART = [ // 8 x 7 -> 16x14
   '.PP..PP.',
   'PPPPPPPP',

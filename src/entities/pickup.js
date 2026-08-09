@@ -1,6 +1,6 @@
 import * as C from '../config.js';
 import { drawMatrix } from '../sprites/palette.js';
-import { BONE, BISCUIT, CARROT, SAUSAGE, HEART } from '../sprites/props.js';
+import { BONE, BISCUIT, CARROT, SAUSAGE, DRUMSTICK, HEART } from '../sprites/props.js';
 
 // Each dog has a favourite treat; hearts restore a life.
 const KINDS = {
@@ -8,6 +8,7 @@ const KINDS = {
   biscuit: { sprite: BISCUIT, w: 16, h: 16 },
   carrot:  { sprite: CARROT,  w: 20, h: 14 },
   sausage: { sprite: SAUSAGE, w: 22, h: 10 },
+  drumstick: { sprite: DRUMSTICK, w: 22, h: 14 },
   heart:   { sprite: HEART,   w: 16, h: 14 },
 };
 

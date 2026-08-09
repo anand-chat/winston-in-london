@@ -20,6 +20,7 @@ const DOGS = [
   { name: 'Mocca',   skin: 'mocca',   color: '#C9A87C', scale: 1,   treat: 'biscuit' },
   { name: 'Maui',    skin: 'maui',    color: '#4A4E57', scale: 1,   treat: 'carrot' },
   { name: 'Max',     skin: 'max',     color: '#8A5A2B', scale: 1.2, treat: 'sausage' },
+  { name: 'Simba',   skin: 'simba',   color: '#D9A249', scale: 1.15, treat: 'drumstick' },
 ];
 const DOG_STAGE_POINTS = 500;
 
