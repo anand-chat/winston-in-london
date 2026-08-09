@@ -15,8 +15,8 @@ function drawShadow(ctx, x, w) {
   ctx.restore();
 }
 
-// Bus: only the body (top 58px of its 88px height) collides; the gap
-// underneath is duckable.
+// Bus: only the body (top 64px of its 88px height) collides; the gap
+// under the chassis is duckable.
 export const BUS_OVERHANG_H = 64;
 
 export class Obstacle {

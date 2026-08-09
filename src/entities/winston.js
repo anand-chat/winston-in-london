@@ -26,6 +26,7 @@ export class Winston {
     this.slowTimer = 0;
     this.barkChance = 0.2;
     this.skin = null;
+    this.skinScale = 1;
   }
 
   get width() { return C.WINSTON_W; }
@@ -116,16 +117,17 @@ export class Winston {
     }
 
     const h = frame === DUCK_FRAMES[0] || frame === DUCK_FRAMES[1] ? C.WINSTON_DUCK_H : C.WINSTON_H;
-    const drawY = y - h;
+    const scale = C.PIXEL_SCALE * this.skinScale;
+    const drawY = y - h * this.skinScale;
 
     if (this.shield) {
       ctx.save();
       ctx.shadowColor = '#F5EFE3';
       ctx.shadowBlur = 12;
-      drawMatrix(ctx, frame, this.x, drawY, C.PIXEL_SCALE, this.skin);
+      drawMatrix(ctx, frame, this.x, drawY, scale, this.skin);
       ctx.restore();
     } else {
-      drawMatrix(ctx, frame, this.x, drawY, C.PIXEL_SCALE, this.skin);
+      drawMatrix(ctx, frame, this.x, drawY, scale, this.skin);
     }
   }
 }

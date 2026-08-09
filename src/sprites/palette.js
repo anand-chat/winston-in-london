@@ -37,7 +37,8 @@ export const CHAR_MAP = {
   D: PALETTE.black,
   G: '#5F7D4F', // green (litter bin)
   X: '#96271F', // dark red shade
-  Y: '#F2B33D', // amber (windows, cone stripe)
+  Y: '#F2B33D',
+  A: '#E8853B', // orange (carrot)
   Z: '#3A3F46', // dark slate shade
 };
 
@@ -47,6 +48,7 @@ export const SKINS = {
   winston: null,
   mocca: { K: '#C9A87C', F: '#AD8B5D' }, // beige & white
   maui:  { K: '#4A4E57', F: '#33363D' }, // dark grey & white
+  max:   { K: '#2B2620', F: '#8A5A2B', C: '#D9A05B' }, // German Shepherd tan & black
 };
 
 export function drawMatrix(ctx, matrix, x, y, scale, remap) {

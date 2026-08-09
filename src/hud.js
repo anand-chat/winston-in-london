@@ -99,11 +99,12 @@ export class Hud {
     // Milestone toasts float up and fade
     ctx.textAlign = 'center';
     ctx.font = '700 20px ui-rounded, "SF Pro Rounded", system-ui, sans-serif';
-    for (const t of this.toasts) {
+    for (let i = 0; i < this.toasts.length; i++) {
+      const t = this.toasts[i];
       const a = t.t < 1.5 ? 1 : 1 - (t.t - 1.5) / 0.5;
       ctx.globalAlpha = Math.max(0, a);
       ctx.fillStyle = '#1B1B1F';
-      ctx.fillText(t.text, LOGICAL_WIDTH / 2, 90 - t.t * 22);
+      ctx.fillText(t.text, LOGICAL_WIDTH / 2, 90 - t.t * 22 + i * 26);
       ctx.globalAlpha = 1;
     }
     ctx.textAlign = 'left';

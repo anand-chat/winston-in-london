@@ -15,11 +15,13 @@ import { storageGet, storageSet } from './storage.js';
 // DYING is the happy "catching the ball" transition into GAME_OVER.
 const STATES = ['BOOT', 'TITLE', 'COUNTDOWN', 'PLAYING', 'DYING', 'GAME_OVER', 'PAUSED'];
 const WEATHERS = ['bright', 'overcast', 'drizzle'];
-const DOG_COLORS = { Winston: '#2E2B33', Mocca: '#C9A87C', Maui: '#4A4E57' };
-const SKIN_SWAPS = [
-  { score: 500,  skin: 'mocca' },
-  { score: 1000, skin: 'maui' },
+const DOGS = [
+  { name: 'Winston', skin: 'winston', color: '#2E2B33', scale: 1,   treat: 'bone' },
+  { name: 'Mocca',   skin: 'mocca',   color: '#C9A87C', scale: 1,   treat: 'biscuit' },
+  { name: 'Maui',    skin: 'maui',    color: '#4A4E57', scale: 1,   treat: 'carrot' },
+  { name: 'Max',     skin: 'max',     color: '#8A5A2B', scale: 1.2, treat: 'sausage' },
 ];
+const DOG_STAGE_POINTS = 500;
 
 function overlap(a, b) {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
@@ -55,7 +57,7 @@ export class Game {
     this.lastJumpTypeTime = -10;
     this.runTime = 0;
     this.nextMilestoneIdx = 0;
-    this.nextSkinIdx = 0;
+    this.dogIdx = 0;
     this.lastHundred = 0;
     this.nextHeartScore = C.HEART_RARITY_POINTS * (0.7 + this.rng.float() * 0.6);
     this.winston.reset();
@@ -78,11 +80,7 @@ export class Game {
     this.targetDarken = 0;
   }
 
-  dogName() {
-    if (this.score >= 1000) return 'Maui';
-    if (this.score >= 500) return 'Mocca';
-    return 'Winston';
-  }
+  currentDog() { return DOGS[this.dogIdx]; }
 
   setState(s) {
     this.state = s;
@@ -191,12 +189,16 @@ export class Game {
       this.hud.toast(C.MILESTONES[this.nextMilestoneIdx].text);
       this.nextMilestoneIdx++;
     }
-    // Relay: Mocca takes over at 500, Maui at 1000
-    while (this.nextSkinIdx < SKIN_SWAPS.length && this.score >= SKIN_SWAPS[this.nextSkinIdx].score) {
-      this.winston.skin = SKINS[SKIN_SWAPS[this.nextSkinIdx].skin];
+    // Relay: a new dog takes over every 500 points, cycling through the pack
+    const stage = Math.floor(this.score / DOG_STAGE_POINTS) % DOGS.length;
+    if (stage !== this.dogIdx) {
+      this.dogIdx = stage;
+      const dog = DOGS[stage];
+      this.winston.skin = SKINS[dog.skin];
+      this.winston.skinScale = dog.scale;
+      this.hud.toast(`${dog.name} takes the lead!`);
       this.particles.emit('sparkle', this.winston.x + 20, this.winston.y - 30, 12, this.rng);
       audio.bark();
-      this.nextSkinIdx++;
     }
     // Every 100: beeps + flash + heart pop
     if (Math.floor(this.score / 100) > Math.floor(prevScore / 100)) {
@@ -261,7 +263,7 @@ export class Game {
           this.lives--;
           this.invulnT = C.SECOND_CHANCE_INVULN_SEC;
           o.hit = true;
-          this.hud.toast(`${this.dogName()} shakes it off!`);
+          this.hud.toast(`${this.currentDog().name} shakes it off!`);
           this.particles.emit('sparkle', this.winston.x + 20, this.winston.y - 30, 10, this.rng);
           audio.bark();
         } else {
@@ -275,7 +277,7 @@ export class Game {
       p.update(dt, effSpeed);
       if (overlap(wbox, p.hitbox())) {
         p.active = false;
-        if (p.kind === 'bone') {
+        if (p.kind !== 'heart') {
           this.score += C.BONE_POINTS;
           this.particles.emit('sparkle', p.x + 9, p.y + 6, 8, this.rng);
           audio.bone();
@@ -373,7 +375,7 @@ export class Game {
 
     // Occasionally spawn a bone in a jump arc after this obstacle
     if (this.rng.chance(0.3)) {
-      this.pickups.spawn('bone', C.LOGICAL_WIDTH + 40 + this.rng.range(120, 260), C.GROUND_Y - 90 - this.rng.range(0, 40));
+      this.pickups.spawn(this.currentDog().treat, C.LOGICAL_WIDTH + 40 + this.rng.range(120, 260), C.GROUND_Y - 90 - this.rng.range(0, 40));
     }
     // Hearts are rare
     if (this.score >= this.nextHeartScore) {
@@ -482,10 +484,7 @@ export class Game {
     this.particles.render(ctx);
 
     if (this.state === 'PLAYING' || this.state === 'DYING' || this.state === 'PAUSED') {
-      this.hud.render(ctx, this.score, this.highScore, this.lives, {
-        name: this.dogName(),
-        color: DOG_COLORS[this.dogName()],
-      });
+      this.hud.render(ctx, this.score, this.highScore, this.lives, this.currentDog());
     }
 
     if (this.showHitboxes) {

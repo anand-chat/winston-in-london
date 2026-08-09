@@ -1,6 +1,15 @@
 import * as C from '../config.js';
 import { drawMatrix } from '../sprites/palette.js';
-import { BONE, HEART } from '../sprites/props.js';
+import { BONE, BISCUIT, CARROT, SAUSAGE, HEART } from '../sprites/props.js';
+
+// Each dog has a favourite treat; hearts restore a life.
+const KINDS = {
+  bone:    { sprite: BONE,    w: 18, h: 12 },
+  biscuit: { sprite: BISCUIT, w: 16, h: 16 },
+  carrot:  { sprite: CARROT,  w: 20, h: 14 },
+  sausage: { sprite: SAUSAGE, w: 22, h: 10 },
+  heart:   { sprite: HEART,   w: 16, h: 14 },
+};
 
 const POOL_SIZE = 8;
 
@@ -8,13 +17,13 @@ export class Pickup {
   constructor() { this.active = false; }
 
   init(kind, x, y) {
-    this.kind = kind; // 'bone' | 'heart'
+    this.kind = kind;
     this.active = true;
     this.x = x;
     this.prevX = x;
     this.y = y;
-    this.w = kind === 'bone' ? 18 : 16;
-    this.h = kind === 'bone' ? 12 : 14;
+    this.w = KINDS[kind].w;
+    this.h = KINDS[kind].h;
     this.t = 0;
   }
 
@@ -32,7 +41,7 @@ export class Pickup {
   render(ctx, alpha) {
     const x = this.prevX + (this.x - this.prevX) * alpha;
     const bob = Math.sin(this.t * 5) * 3;
-    drawMatrix(ctx, this.kind === 'bone' ? BONE : HEART, x, this.y + bob, C.PIXEL_SCALE);
+    drawMatrix(ctx, KINDS[this.kind].sprite, x, this.y + bob, C.PIXEL_SCALE);
   }
 }
 

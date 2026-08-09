@@ -72,9 +72,9 @@ test('second chance: first collision costs a life, run continues', async ({ page
     }
     return { livesBefore, afterHit: hitState && { lives: hitState.lives, state: hitState.state } };
   });
-  expect(r.livesBefore).toBe(2);
+  expect(r.livesBefore).toBe(3);
   expect(r.afterHit).not.toBeNull();
-  expect(r.afterHit.lives).toBe(1);
+  expect(r.afterHit.lives).toBe(2);
   expect(r.afterHit.state).toBe('PLAYING');
 });
 

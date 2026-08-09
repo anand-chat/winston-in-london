@@ -79,11 +79,9 @@ export const WEATHER_TRANSITION_SEC = 4;
 export const MILESTONES = [
   { score: 100,  text: 'Good boy!' },
   { score: 250,  text: 'Winston is warming up' },
-  { score: 500,  text: 'Mocca takes the lead!' },
   { score: 750,  text: 'Tail at maximum wag' },
   { score: 1000, text: SECRET_MESSAGE },
-  { score: 1080, text: 'Maui takes the lead!' },
-  { score: 1500, text: 'No Chihuahua has ever run this far' },
+  { score: 1250, text: 'No Chihuahua has ever run this far' },
   { score: 2000, text: "He's doing it for you" },
 ];
 
@@ -92,7 +90,7 @@ export const HIGH_SCORE_KEY = 'winston_high_score';
 export const MUTE_KEY = 'winston_muted';
 
 // Lives: Winston gets a second chance before the run ends
-export const LIVES = 2;
+export const LIVES = 3;
 export const SECOND_CHANCE_INVULN_SEC = 1.5;
 
 // Catch sequence (run end)
